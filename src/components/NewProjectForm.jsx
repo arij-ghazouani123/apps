@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Alert } from 'reactstrap';
 
 //import jwtDecode from 'jwt-decode';
 
 
 
 export default function NewProjectForm() {
-    const [error, setError] = useState(false)
-    const [done, setDone] = useState(false)
+
 
     const [name, setName] = useState("");
     const [releaseType, setReleaseType] = useState("");
@@ -37,8 +35,7 @@ export default function NewProjectForm() {
 
     // Button Click Handler
     function handleClick() {
-       // window.alert("Your request has been completed successfully.")
-       setDone(true);
+        window.alert("Your request has been completed successfully.")
 
         fetch('/project/addProject/', {
             method: 'POST',
@@ -70,8 +67,6 @@ export default function NewProjectForm() {
     }
 
     return (
-        <>
-       
         <div style={{ width: 500, height: 500, padding: 10 }}>
             <form style={{ border: "2px solid blue", padding: 30 }}>
                 <div class="mb-3">
@@ -172,17 +167,11 @@ export default function NewProjectForm() {
                     <button type="button" class="btn btn-primary" onClick={handleClick}>Add New App</button>
                 </div>
 
-                    {
-                        done && <Alert color="info">
-                            Your request has been completed successfully.
-                        </Alert>
 
-                    }
 
             </form>
 
 
         </div>
-        </>
     );
 }

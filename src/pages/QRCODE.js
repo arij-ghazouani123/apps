@@ -38,7 +38,7 @@ function QrCode() {
     try {
       const response = await axios.get(`/api/release/${id}`);
       const note = response.data._id
-      setUsers( "http://172.16.15.58:3000/Android/" +note);
+      setUsers( "http://172.16.6.75:3000/Android/" +note);
       console.log("ttttttttt", note);
       return note;
     } catch (error) {

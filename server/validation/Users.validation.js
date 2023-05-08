@@ -8,6 +8,7 @@ export default  function ValidateUser(data) {
   data.Notes = !isEmpty(data.Notes) ? data.Notes : "";
   data.Date = !isEmpty(data.Date) ? data.Date : "";
   data.Testeur = !isEmpty(data.Testeur) ? data.Testeur : "";
+  data.errordescription = !isEmpty(data.errordescription) ? data.errordescription : "";
   // data.Version = !isEmpty(data.Version) ? data.Version : "";
  
  
@@ -19,6 +20,9 @@ export default  function ValidateUser(data) {
   }
   if (validator.isEmpty(data.Testeur)) {
     errors.Testeur = "Required Testeur";
+  } 
+   if (validator.isEmpty(data.errordescription)) {
+    errors.errordescription = "Required errordescription";
   }
   // if (validator.isEmpty(data.Version)) {
   //   errors.Version = "Required Version";

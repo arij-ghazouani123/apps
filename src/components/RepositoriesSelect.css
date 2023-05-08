@@ -89,7 +89,7 @@
     margin-bottom: 5px;
   }
   .my-comp .card-body{
-    background: linear-gradient( #ffffff  , #ffffff ); 
+    background: linear-gradient(30deg, #0078d4  30%, #d8d8da 20%); 
   }
 
 

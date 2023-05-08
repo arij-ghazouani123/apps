@@ -1,5 +1,5 @@
 import  express from 'express';
-import { FindAllTesteur,AddRelease,DeleteRelease,FindAllRelease,FindSinglRelease,UpdateRelease, AddReleaseApk,getfile } from '../controllers/Release.controller.js';
+import { FindAllTesteur,AddRelease,UpdateReleaseER,updateErrorRelease,DeleteRelease,FindAllRelease,FindSinglRelease,UpdateRelease, AddReleaseApk,getfile } from '../controllers/Release.controller.js';
 const router = express.Router();
 import multer from "multer";
 //import path from "path";
@@ -41,9 +41,13 @@ router.get('/release/:id', FindSinglRelease)
 
 /* add user */
 router.put('/release/release/:id', UpdateRelease)
+router.put('/release/releaseER/:id', UpdateReleaseER)
 
 /* add user */
 router.delete('/release/:id', DeleteRelease)
+
+
+
 
 
 // module.exports = router;

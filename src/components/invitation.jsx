@@ -8,7 +8,7 @@ mixpanel.init('24382e06ab44f0ebb6a5e1913b4d5862',{
 });
 const InviteForm = () => {
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('Developer');
+  const [role, setRole] = useState('');
 
   const [errors, setErrors] = useState({});
   const history = useHistory();
@@ -24,8 +24,6 @@ const InviteForm = () => {
       console.log(response7.status);
       if (response7.status === 409) {
         window.alert('this user is already a contributor in the project');
-        history.push('/ProjectList')
-      }else if (response7.status === 200){
         history.push('/ProjectList')
       }
   };

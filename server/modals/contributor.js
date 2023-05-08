@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import userSchema from "./user.js";
+
 const { Schema, model } = mongoose;
 const contributorSchema = new Schema(
   {
@@ -17,8 +17,8 @@ const contributorSchema = new Schema(
     }],
 
     user: {
-      type: [userSchema.schema],
-      default: []
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
     }
 
   });

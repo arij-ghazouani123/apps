@@ -80,13 +80,21 @@ function Home() {
   const [disableRow, setDisableRow] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpenedit, setModalIsOpenedit] = useState(false);
-
   const handleRowClick = (id) => {
     if (!disableRow) {
       setSelectedRow(id);
       navigate.push(`/info/${id}`);
     }
   };
+  const [disabledRowId, setDisabledRowId] = useState(null);
+
+  const handleDisableRow = () => {
+    setDisableRow(true);
+    setDisabledRowId(selectedRow);
+  };
+
+
+
 
   const reload = () => {
     window.location.reload();
@@ -205,15 +213,20 @@ function Home() {
   }, [users]);
   const loadRelease = async () => {
     await axios.get("/api/release").then((res) => {
-      setUsers(res.data);
+      // Loop over the releases and disable any rows with an error description
+      const releases = res.data.map((release) => ({
+        ...release,
+        disabled: release.errordescription,
+      }));
+      setUsers(releases);
     });
   };
 
   const loadTesteur = async () => {
     try {
       const response = await axios.get("/api/releaseTesteur");
-      const testeur = response.data.map(({ user: { userName } }) => ({
-        userName,
+      const testeur = response.data.map(({ user: { _id,userName } }) => ({
+        userName,_id
       }));
       setTesteur(testeur);
       console.log("ttttttttt", testeur);
@@ -222,6 +235,24 @@ function Home() {
       console.log(error.message);
     }
   };
+
+
+  // const loadTesteur = async () => {
+  //   try {
+  //     const response = await axios.get("/api/releaseTesteur");
+  //     const releases = response.data;
+  //     const testeur = releases.map(({ Testeur }) => ({
+  //       userName: Testeur?.userName  ,
+        
+  //       // add any other fields you want to include
+  //     }));
+  //     setTesteur(testeur);
+  //     console.log("Testeur list:", testeur);
+  //     return testeur;
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
   const TesteurCount = users.reduce((count, user) => {
     if (user.Testeur) {
       return count + 1;
@@ -283,7 +314,7 @@ function Home() {
           onRequestClose={() => setModalIsOpen(false)}
         >
           {" "}
-          Add New Release
+          Add New Project
         </button>
       </div>
       <div className="row p-8" style={{ marginTop: -40, marginLeft: 30 }}>
@@ -291,100 +322,106 @@ function Home() {
         <Alert message={message} show={show} />
         <div className="mt-4">
           <h2> </h2>
+          
         </div>
+
         <div className="mt-4">
           <h2> </h2>
+          
         </div>
-        <div style={{marginBottom:"60%"}}>
-          <div className="col-12 col-lg-12">
-            <Table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">File</th>
-                  <th scope="col">Version</th>
-                  <th scope="col">Notes</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Testeur</th>
-                  <th
-                    scope="col"
-                    onClick={(e) => {
-                      // prevent row click handler from being called
-                      e.stopPropagation();
-                    }}
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(({ Notes, Testeur, Version, Date, Lien, _id }) => (
-                  <tr
-                    key={_id}
-                    className={`${selectedRow === _id ? "selected" : ""} ${disableRow ? "disabled" : ""
-                      }`}
-                  >
-                    <td onClick={() => handleRowClick(_id)}>
-                      <FolderCopyIcon style={{ color: "yellow" }} />
-                    </td>
-                    <td onClick={() => handleRowClick(_id)}>
-                      <Badge color="danger">{Version}</Badge>
-                    </td>
-                    <td onClick={() => handleRowClick(_id)}>{Notes}</td>
-                    <td onClick={() => handleRowClick(_id)}>{Date}</td>
-                    <td onClick={() => handleRowClick(_id)}>{Testeur}</td>
-                    <td>
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="icon-btn hide-arrow"
-                          color="transparent"
-                          size="sm"
-                          caret
-                        >
-                          <MoreVertical size={15} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem
-                            href="/"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <Edit className="me-50" size={15} />
-                            <span className="align-middle"
-                            >
-                              <Link to={`/release/${_id}`} className="text-black">
-                                Edit
-                              </Link>
-                            </span>
-                          </DropdownItem>
-                          <DropdownItem
-                            href="/"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <Trash className="me-50" size={15} />
-                            <span
-                              className="align-middle"
-                              onClick={() => OnDelete(_id)}
-                            >
-                              Delete
-                            </span>
-                          </DropdownItem>
-                          <DropdownItem onClick={(e) => e.preventDefault()}>
-                            <ZapOff className="me-50" size={15} />
-                            <span
-                              className="align-middle"
-                              onClick={() => setDisableRow(true)}
-                              style={disableRow ? { color: "gray" } : {}}
-                            >
-                              Disable
-                            </span>
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+
+        <div className="col-12 col-lg-12">
+        <Table className="table">
+      <thead>
+        <tr>
+          <th scope="col">File</th>
+          <th scope="col">Version</th>
+          <th scope="col">Notes</th>
+          <th scope="col">Date</th>
+          <th scope="col">Testeur</th>
+          <th
+            scope="col"
+            onClick={(e) => {
+              // prevent row click handler from being called
+              e.stopPropagation();
+            }}
+          >
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map(({ Notes, Testeur, Version, Date, Lien, _id }) => (
+          <tr
+            key={_id}
+            className={`${selectedRow === _id ? "selected" : ""} ${
+              disableRow && disabledRowId !== _id ? "disabled" : ""
+            }`}
+          >
+            <td onClick={() => handleRowClick(_id)}>
+              <FolderCopyIcon style={{ color: "yellow" }} />
+            </td>
+            <td onClick={() => handleRowClick(_id)}>
+              <Badge color="danger">{Version}</Badge>
+            </td>
+            <td onClick={() => handleRowClick(_id)}>{Notes}</td>
+            <td onClick={() => handleRowClick(_id)}>{Date}</td>
+            <td onClick={() => handleRowClick(_id)}>{Testeur}</td>
+            <td>
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  className="icon-btn hide-arrow"
+                  color="transparent"
+                  size="sm"
+                  caret
+                >
+                  <MoreVertical size={15} />
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem href="/" onClick={(e) => e.preventDefault()}>
+                    <Edit className="me-50" size={15} />
+                    <span className="align-middle">
+                      <Link to={`/release/${_id}`} className="text-black">
+                        Edit
+                      </Link>
+                    </span>
+                  </DropdownItem>
+                  <DropdownItem href="/" onClick={(e) => e.preventDefault()}>
+                    <Trash className="me-50" size={15} />
+                    <span
+                      className="align-middle"
+                      onClick={() => OnDelete(_id)}
+                    >
+                      Delete
+                    </span>
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleDisableRow()}>
+                    <ZapOff className="me-50" size={15} />
+                    <span
+                      className="align-middle"
+                      style={
+                        disableRow && disabledRowId === _id ? { color: "gray" } : {}
+                      }
+                    >
+                      Disable
+                    </span>
+                  </DropdownItem>
+
+                  <DropdownItem href="/" onClick={(e) => e.preventDefault()}>
+                    <Edit className="me-50" size={15} />
+                    <span className="align-middle">
+                      <Link to={`/releaseER/${_id}`} className="text-black">
+                        Error Discription
+                      </Link>
+                    </span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
         </div>
       </div>
       <div>
@@ -411,18 +448,18 @@ function Home() {
                     <h5>Testeur</h5>
 
                     <select
-                      style={{ width: 180, height: 40, borderRadius: 20 }}
-                      value={formData.Testeur}
-                      onChange={handleTesteurChange}
-                    >
-                      <option value="">Select Testeur</option>
+        style={{ width: 180, height: 40, borderRadius: 20 }}
+        value={formData.Testeur}
+        onChange={handleTesteurChange}
+      >
+        <option value="">Select Testeur</option>
 
-                      {testeur.map((t, index) => (
-                        <option key={index} value={t.userName}>
-                          {t.userName}
-                        </option>
-                      ))}
-                    </select>
+        {testeur.map((t, index) => (
+          <option key={index} value={t.userName}>
+            {t.userName}
+          </option>
+        ))}
+      </select>
                   </div>
                   {/* <div>
               <Label htmlFor="Version">Version</Label>
@@ -467,7 +504,7 @@ function Home() {
 
 
 
-
+       
 
 
 

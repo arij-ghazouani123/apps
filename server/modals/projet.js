@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import contributorSchema from "./contributor.js";
 
 const { Schema, model } = mongoose;
 const projectSchema = new Schema(
@@ -9,10 +8,10 @@ const projectSchema = new Schema(
             ref: 'user'
         },
 
-        contributors: {
-            type: [contributorSchema.schema],
-            default: []
-          },
+        contributors: [{
+            type: Schema.Types.ObjectId,
+            ref: 'contributor'
+        }],
 
         name: {
             type: String,

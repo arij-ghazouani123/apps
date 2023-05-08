@@ -58,7 +58,7 @@ function GitHubAuth(props) {
 
   return (
     <div>
-      {!accessToken && <button class="btn btn-primary  w-30 rounded-pill" onClick={handleAuthClick}>Authorize with GitHub</button>}
+      {!accessToken && <button onClick={handleAuthClick}>Authorize with GitHub</button>}
       {accessToken && <div>Access token: {accessToken}</div>}
     </div>
   );

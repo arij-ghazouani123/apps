@@ -6,7 +6,6 @@ import Afficheprojectmodel from './afficheprojectModel';
 import ProjectDetails from './afficheprojectDetails';
 import UpdateProjectModal from './UpdateProjectModal ';
 import { useHistory } from 'react-router-dom';
-import DeleteContributorModal from './DeleteContributorModel';
 
 
 export default function ProjectsList() {
@@ -31,13 +30,14 @@ export default function ProjectsList() {
     };
     useEffect(() => {
         axios.get(`http://localhost:9090/project/myProjects/${userId}`)
-          .then(res => {
-            setData(res.data);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }, []); 
+            .then(res => {
+                console.log(res.data);
+                setData(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
 
 
 
@@ -48,15 +48,15 @@ export default function ProjectsList() {
         // Store the id in state or local storage
         //history.push('/register')
         return (id)
-
+        
     }
-    function handleInviteClick(id) {
+    function handleInviteClick(id){
         console.log(`Clicked on project ${id}`);
         localStorage.setItem('projectIdFromProjectLists', id);
         // Store the id in state or local storage
         return (id, history.push('/invitation'))
     }
-
+    
     function handleDashboardClick(id) {
         console.log(`Clicked on project ${id}`);
         localStorage.setItem('projectIdFromProjectLists', id);
@@ -70,50 +70,43 @@ export default function ProjectsList() {
     }
     return (
         <div>
+            <NewProjectModal />
 
+            <table className="table table-hover" style={{ border: "3px solid black", margin: 30 }}>
+                <thead>
+                    <tr className='table-info'>
+                        <th scope="col">App Name</th>
+                        <th scope="col">OS</th>
+                        <th scope="col">Platform</th>
+                        <th scope="col">Options</th>
 
-            <div style={{ width: '80%', margin: "8%" }}>
-                <h1 style={{fontFamily:'-moz-initial'}}> Project List</h1>
-                <NewProjectModal />
-
-                <table className="table table-bordered" style={{ border: "1px solid black", marginBottom: "50%" }}>
-                    <thead>
-                        <tr>
-                            <th scope="col">App Name</th>
-                            <th scope="col">OS</th>
-                            <th scope="col">Platform</th>
-                            <th scope="col">Options</th>
-
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item) => (
+                        <tr key={item.id} >
+                            <td>{item.name}</td>
+                            <td>{item.opSystem}</td>
+                            <td>{item.platform}</td>
+                            <td>
+                                <button onClick={() => handleRowClick(item._id)} style
+                                    ={{ border: 'none', outline: 'none' }} class="btn btn-light w-30 rounded-pill"> <UpdateProjectModal/>   </button>
+                                <button type="button" class="btn btn-danger  w-30 rounded-pill" onClick={(event) => {
+                                    handleRowClick(item._id); handleDeleteChange(event);
+                                }}>Delete</button>
+                                {/* <button type="button" class="btn btn-primary  w-30 rounded-pill" onClick={() => handleRowClick(item._id)} ><NavLink to="/invitation">Invite</NavLink></button> */}
+                                <button type="button" class="btn btn-primary  w-30 rounded-pill" onClick={() => handleInviteClick(item._id)}>Invite</button>
+                                <button type='button' class="btn btn-primary  w-30 rounded-pill" onClick={() => handleDashboardClick(item._id)}>Your space</button>
+                                {showDetails && <ProjectDetails itemId={handleRowClick(item._id)} onClose={handleDetailsClose} />}
+                                <Afficheprojectmodel itemId={handleRowClick(item._id)} />
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item) => (
-                            <tr key={item.id} >
-                                <td>{item.name}</td>
-                                <td>{item.opSystem}</td>
-                                <td>{item.platform}</td>
-                                <td>
-                                    <button onClick={() => handleRowClick(item._id)} style
-                                        ={{ border: 'none', outline: 'none' }} class="btn btn-light w-30 rounded-pill"> <UpdateProjectModal />   </button>
-                                    <button type="button" class="btn btn-danger  w-30 rounded-pill" onClick={(event) => {
-                                        handleRowClick(item._id); handleDeleteChange(event);
-                                    }}>Delete</button>
-                                    {/* <button type="button" class="btn btn-primary  w-30 rounded-pill" onClick={() => handleRowClick(item._id)} ><NavLink to="/invitation">Invite</NavLink></button> */}
-                                    <button type="button" class="btn btn-primary  w-30 rounded-pill" onClick={() => handleInviteClick(item._id)}>Invite</button>
-                                    <button type='button' class="btn btn-primary  w-30 rounded-pill" onClick={() => handleDashboardClick(item._id)}>Your space</button>
-                                    {showDetails && <ProjectDetails itemId={handleRowClick(item._id)} onClose={handleDetailsClose} />}
-                                    <Afficheprojectmodel itemId={handleRowClick(item._id)} />
-                                    <DeleteContributorModal itemId={handleRowClick(item._id)} />
-
-                                </td>
-                            </tr>
-                        ))}
+                    ))}
 
 
-                    </tbody>
+                </tbody>
 
-                </table>
-            </div>
+            </table>
         </div>
 
     );

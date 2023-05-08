@@ -25,7 +25,7 @@ import routerrelease from './routes/Release.route.js';
 const app = express();
 
 const port = process.env.port || 9090;
-const databaseName ='buildLab';
+const databaseName ='buildLabarij';
 
 app.use(
     cors({

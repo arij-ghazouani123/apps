@@ -65,7 +65,7 @@ function ProjectDetails(props) {
           <td>{project.platform}</td>
           <td>{project.user.userName}</td>
           <td>{contributorRole}</td>
-          <td>{project.contributors.map(contributor => contributor.user.map(user => `${user.userName}:${contributor.role}`)).join('/')}</td>
+          <td> {project.contributors.map(contributor => `${contributor.user.userName}:${contributor.role}`).join('/')}</td>
         </tr>
       ))}
     </tbody>

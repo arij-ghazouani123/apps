@@ -4,9 +4,6 @@ import { useHistory } from "react-router";
 import styles from "./styles.module.css";
 import { Link } from "react-router-dom";
 import useLocalStorage from 'use-local-storage'
-import { Alert } from "reactstrap";
-
-
 
 
 
@@ -32,7 +29,6 @@ const Login = () => {
   //   setTheme(newTheme)
   // }
 
-
   const history = useHistory()
 
   const GoogleAuth = () => {
@@ -41,7 +37,7 @@ const Login = () => {
       "_self"
     );
   };
-  const [error, setError] = useState(false)
+
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -66,33 +62,27 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
+        body: JSON.stringify({   
           email,
           password
         })
       });
 
-      if (res.status === 401 || !res) {
-        //window.alert("Invalid Credentials")
-        setError(true)
-
+      if (res.status === 400 || !res) {
+        window.alert("Invalid Credentials")
       } else if (res.status === 200) {
-
-        // window.alert("Login Successfull");
-
+        window.alert("Login Successfull");
         const data = await res.json();
         localStorage.setItem("idfromtoken", data.idfromtoken);
         localStorage.setItem("emailfromtoken", data.emailfromtoken);
         history.push('/ProjectList');
-
-
+        
         // Token is generated When we Logged In.
         // Now we need to create Schema for Messages
       }
 
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -101,16 +91,6 @@ const Login = () => {
 
   return (
     <div>
-
-      {
-        error && <Alert color="danger">
-          Invalid Credentials !!
-        </Alert>
-
-      }
-
-
-
       <div className="container shadow my-5">
         <div className="row">
           <div className="col-md-5 d-flex flex-column align-items-center text-white justify-content-center form">
@@ -171,18 +151,18 @@ const Login = () => {
                 </Link>
 
                 <Link to="/payment" className="btn btn-link">
-                  payment
-
-                </Link>
-
+                    payment 
+                    
+                  </Link>
+              
               </div>
 
               <button type="submit" className="btn btn-primary w-100 mt-4 rounded-pill">
-
-                Login
-
+               
+                  Login
+                
               </button>
-
+              {/* <i onClick={switchTheme} class='fas fa-toggle-on'></i> */}
               <center>
                 <div className="form-text" >
                   Or you can

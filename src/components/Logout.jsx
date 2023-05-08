@@ -15,8 +15,7 @@ const Logout = () => {
                 },
                 credentials : "include"
             });
-            
-           localStorage.clear();
+
             if(res.status === 401 || !res ){
                 window.alert("Please Logout Later");
             }else{

@@ -8,6 +8,12 @@ const ReleaseSchema = new Schema({
     Date: String,
     image:  String,
     apkFile: String,
+    errordescription: {
+        type: String,
+        
+     
+  
+      },
     lien: String
    
 }, {timestamps: true})

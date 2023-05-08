@@ -2,40 +2,22 @@ import React, { useState, Suspense } from 'react';
 
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import  { useEffect } from 'react';
+
 
 const Navbar = (props) => {
   const history = useHistory();
   const location = useLocation();
   const { t, i18n } = useTranslation();
-
-  const [showProjectList, setShowProjectList] = useState(false);
-
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
     i18n.changeLanguage(selectedLanguage);
   };
   const handleLogout = () => {
-    
-    setShowProjectList(false);
-    localStorage.clear();
+    // handle logout logic here
+    // and redirect to login page
     history.push('/login');
    
   };
- 
-
-  const handleLogin = () => {
-    if (localStorage.getItem('idfromtoken') !== null) {
-      setShowProjectList(true);
-
-    }
-  };
-
-  useEffect(() => {
-    handleLogin();
-  }, [handleLogin]);
-
-
 
   return (
     <div>
@@ -60,39 +42,25 @@ const Navbar = (props) => {
               <li className="nav-item">
                 <NavLink className="nav-link" to="/contact">{t('Contact')}</NavLink>
               </li>
-              {showProjectList ? (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/ProjectList">{t('ProjectList')}</NavLink>
-                </li>
-              ) : null}
               <li className="nav-item">
-              <a className="nav-link" href="http://localhost:3001/">Documentation</a>
-
-        </li>
+                <NavLink className="nav-link" to="/Second">{t('Dashboard')}</NavLink>
+              </li>
             </ul>
 
             <NavLink className="navbar-brand fw-bolder fs-4 mx-auto" to="/">{t('BUILD-LAB')}</NavLink>
-                
-            {(location.pathname === '/dashboard' || location.pathname === '/ProjectList' || location.pathname === '/SettingsPage' || location.pathname === '/invitation'
-              || location.pathname === '/' || location.pathname === '/about' || location.pathname === '/service' 
-              // eslint-disable-next-line no-mixed-operators
-              || location.pathname === '/contact')   && showProjectList ?  (
-                
-              <>
-                   
 
+            {location.pathname === '/dashboard' ? (
+              <>
                 <NavLink to="/Profile" className="btn btn-outline-primary ms-2 px-4 rounded-pill">
                   <i className="fa fa-cog"></i> {t('Profile')}
                 </NavLink>
                 <NavLink to="/SettingsPage" className="btn btn-outline-primary ms-2 px-4 rounded-pill">
                   <i className="fa fa-cog"></i> {t('Settings')}
                 </NavLink>
-                
                 <button className="btn btn-outline-primary ms-2 px-4 rounded-pill" onClick={handleLogout}>
                   <i className="fa fa-sign-out"></i> {t('Logout')}
                 </button>
               </>
-                
             ) : (
               <>
                 <NavLink to="/login" className="btn btn-outline-primary ms-auto px-4 rounded-pill">
